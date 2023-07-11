@@ -1,0 +1,76 @@
+.item-container {
+  padding-block: 20px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 1px solid #76b7cd;
+  .ant-checkbox-wrapper {
+    border-radius: 50px;
+
+    &:focus-visible,
+    &:hover {
+      outline: none;
+    }
+
+    .ant-checkbox {
+      .ant-checkbox-inner:after {
+        border-color: #d98326;
+      }
+      &:not(.ant-checkbox-disabled):hover .ant-checkbox-inner {
+        border-color: #737373;
+      }
+    }
+    .ant-checkbox-checked:not(.ant-checkbox-disabled):hover
+      .ant-checkbox-inner {
+      background-color: transparent;
+      border-color: #d98326;
+    }
+
+    .ant-checkbox-checked {
+      .ant-checkbox-inner {
+        border: 3px solid #d98326;
+      }
+    }
+
+    .ant-checkbox-inner {
+      background-color: transparent;
+      border: 3px solid #737373;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+
+      &:after {
+        border-width: 5px;
+        width: 15.414286px !important;
+        height: 23.942857px !important;
+      }
+    }
+  }
+
+  label.todo-title {
+    flex: 1;
+    font-size: 32px;
+    color: #323232;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    @media (max-width: 992px) {
+      font-size: 24px;
+    }
+  }
+  label.todo-completed {
+    color: #c2c2c2;
+    font-weight: 400;
+    text-decoration-line: line-through;
+  }
+
+  button.btn-delete {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    justify-self: flex-end;
+  }
+}

@@ -1,0 +1,42 @@
+.tab-container {
+  .ant-radio-group {
+    width: 100%;
+
+    .ant-radio-wrapper-checked {
+      > span {
+        color: #323232 !important;
+        border-bottom: 5px solid #d98326;
+        padding-bottom: 0px;
+      }
+    }
+
+    > label {
+      width: 50%;
+      margin: 0;
+      padding-top: 20px;
+      user-select: none;
+      background: #f3f3f3;
+      color: #969696;
+      text-align: center;
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: 1.6px;
+
+      &:nth-child(2) {
+        transition: 1s all ease;
+      }
+
+      span {
+        width: 100%;
+        padding-bottom: 5px;
+        @media (max-width: 768px) {
+          font-size: 24px;
+        }
+      }
+
+      .ant-radio {
+        display: none;
+      }
+    }
+  }
+}
