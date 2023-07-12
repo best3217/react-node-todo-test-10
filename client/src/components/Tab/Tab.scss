@@ -1,5 +1,5 @@
 .tab-container {
-  background-color: #F3F3F3;
+  background-color: #f3f3f3;
   .ant-tabs-nav-operations {
     display: none !important;
   }
@@ -15,9 +15,10 @@
         width: 100%;
         display: flex;
         justify-content: center;
+        margin: 0 !important;
         padding-top: 20px;
         padding-bottom: 5px;
-        
+
         .ant-tabs-tab-btn {
           color: #969696;
           text-align: center;
