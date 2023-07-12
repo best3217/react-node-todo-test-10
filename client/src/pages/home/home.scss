@@ -1,5 +1,6 @@
 .container {
   background: #fff;
+
   .content-main {
     width: 1040px;
     margin: auto;
@@ -20,29 +21,36 @@
       width: 500px;
     }
     @media (max-width: 552px) {
-      width: 380px;
+      width: 100%;
       margin-inline: 0;
     }
 
     .list-container {
       background: #f1ece6;
       width: 100%;
-      padding: 0 50px 0 45px;
+      padding: 0 50px 20px 45px;
       border-radius: 50px;
       @media (max-width: 992px) {
         padding-inline: 20px;
         border-radius: 20px;
       }
+
       p.no-todo {
         font-size: 32px;
         text-align: center;
+        margin-top: 30px;
+        margin-bottom: 10px;
+        @media (max-width: 992px) {
+          font-size: 20px;
+        }
       }
+
       .btn-clear-completed {
         box-shadow: none;
         outline: none;
         height: auto;
         color: #d98326;
-        margin: 97px 0 20px auto;
+        margin: 97px 0 0 auto;
         font-size: 24px;
         border: none;
         background: transparent;

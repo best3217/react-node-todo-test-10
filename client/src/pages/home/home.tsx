@@ -1,72 +1,104 @@
-import React, { useEffect, useState } from "react";
-import { Layout, Modal, Button, Image } from "antd";
-import { toast } from "react-toastify";
+import React, { useEffect, useState, useMemo } from "react"
+import { Layout, Modal, Button, Image } from "antd"
+import { toast } from "react-toastify"
 
-import Header from "../../components/Header/Header";
-import Tab from "../../components/Tab/Tab";
-import InputBox from "../../components/InputBox/InputBox";
-import TodoItem from "../../components/TodoItem/TodoItem";
-import { TAB_VALUES } from "../../components/Tab/Tab";
-import { getTodos, addTodo, deleteCompletedTodos } from "../../apis";
+import { getTodos, addTodo, deleteCompletedTodos } from "../../apis"
+import Header from "../../components/Header/Header"
+import Tab from "../../components/Tab/Tab"
+import InputBox from "../../components/InputBox/InputBox"
+import TodoItem from "../../components/TodoItem/TodoItem"
+import { responseTypes, todoTypes } from "../../types"
+import { TAB_VALUES } from "../../constants"
 
-import "./home.scss";
+import "./home.scss"
 
 const Home: React.FC = () => {
-  const [activeTab, setTab] = useState<number>(TAB_VALUES.PERSONAL);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [items, setItems] = useState<any>([]);
+  const [activeTab, setTab] = useState<number>(TAB_VALUES.PERSONAL)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [items, setItems] = useState<todoTypes[]>([])
+  const hasCompltedTodo = useMemo(() => {
+    console.log(items.filter((item) => item.status === 1))
+    return items.filter((item) => item.status === 1).length > 0
+  }, [items])
 
   const showModal = () => {
-    setIsModalOpen(true);
-  };
+    setIsModalOpen(true)
+  }
 
   const handleOk = async () => {
-    setIsModalOpen(false);
-    const { status } = await deleteCompletedTodos(activeTab);
-    if (status === 200) {
-      toast.success("Cleared successfully!");
+    setIsModalOpen(false)
+    const { data, errorMessage }: responseTypes = await deleteCompletedTodos(
+      activeTab
+    )
+
+    if (errorMessage) {
+      toast.error(errorMessage)
+      return
     }
-  };
+    if (data?.status === "OK") {
+      toast.success("Cleared successfully!")
+      getList()
+    } else {
+      toast.error("Whoops something went wrong!")
+    }
+  }
 
   const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
 
   const handleAddClick = async (note: string) => {
     if (!note) {
-      toast.warning("Please enter todo title!");
-      return;
+      toast.warning("Please enter todo title!")
+      return
     }
 
-    const { status, data }: any = await addTodo({
+    const { data, errorMessage }: responseTypes = await addTodo({
       note,
       type: activeTab,
       status: 0,
-    });
+    })
 
-    if (status === 200 && !data.field) {
-      toast.success("Added successfully!");
-      getList();
-    } else if (data.field === "title") {
-      toast.warn("Please enter todo title!");
-    } else {
-      toast.error("Whoops something went wrong! Try again later.");
+    if (errorMessage) {
+      console.log("errorMessage", errorMessage)
+      toast.error(errorMessage)
+      return
     }
-  };
+
+    if (data?.status === "Error" && data.field) {
+      toast.error(`Plealse enter ${data.field}!`)
+      return
+    }
+
+    if (data?.status === "OK" && data?.result) {
+      toast.success("New todo added!")
+      getList()
+    }
+  }
 
   const getList = async () => {
-    const { data } = await getTodos(activeTab);
-    setItems(data.result);
-  };
+    const { data, errorMessage }: responseTypes = await getTodos(activeTab)
+
+    if (errorMessage) {
+      toast.error(errorMessage)
+    }
+    if (data?.status === "OK") {
+      setItems(data.result)
+    }
+  }
 
   useEffect(() => {
-    getList();
-  }, [activeTab]);
+    console.log("has", hasCompltedTodo)
+  }, [hasCompltedTodo])
+
+  useEffect(() => {
+    getList()
+  }, [activeTab])
 
   return (
     <Layout className="container">
       <Header />
-      <Tab value={activeTab} onChange={setTab} />
+      <Tab onChange={setTab} />
 
       <Layout className="content-main">
         <InputBox
@@ -76,9 +108,7 @@ const Home: React.FC = () => {
 
         <div className="list-container">
           {items && items.length === 0 ? (
-            <>
-              <p className="no-todo">No todos added yet!</p>
-            </>
+            <p className="no-todo">No todos added yet!</p>
           ) : (
             <>
               {items.map((item: any, index: number) => (
@@ -89,12 +119,16 @@ const Home: React.FC = () => {
                   onComplete={getList}
                 />
               ))}
-              <Button className="btn-clear-completed" onClick={showModal}>
-                <Image src="/images/clear.svg" alt="clear" preview={false} />
-                Clear Completed
-              </Button>
+
+              {hasCompltedTodo && (
+                <Button className="btn-clear-completed" onClick={showModal}>
+                  <Image src="/images/clear.svg" alt="clear" preview={false} />
+                  Clear Completed
+                </Button>
+              )}
             </>
           )}
+
           <Modal
             title="Clear completed todos"
             open={isModalOpen}
@@ -106,7 +140,7 @@ const Home: React.FC = () => {
         </div>
       </Layout>
     </Layout>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

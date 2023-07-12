@@ -1,36 +1,34 @@
-import { Radio, RadioChangeEvent } from "antd"
+import { Radio, Tabs, RadioChangeEvent } from "antd"
 import "./Tab.scss"
 
-export const TAB_VALUES = {
-  PERSONAL: 0,
-  PROFESSIONAL: 1,
-}
-
-const options = [
-  {
-    label: "Personal",
-    value: TAB_VALUES.PERSONAL,
-  },
-  {
-    label: "Professional",
-    value: TAB_VALUES.PROFESSIONAL,
-  },
-]
-
 interface TabProps {
-  value: number | null
   onChange: (value: number) => void
 }
 
-const Tab: React.FC<TabProps> = ({ value, onChange }) => {
-  const handleOnChange = (e: RadioChangeEvent) => {
-    console.log("value", value)
-    onChange(Number(e.target.value))
+const items = [
+  {
+    key: "0",
+    label: "Personal",
+  },
+  {
+    key: "1",
+    label: `Professional`,
+  },
+]
+
+const Tab: React.FC<TabProps> = ({ onChange }) => {
+  const handleOnChange = (key: string) => {
+    onChange(Number(key))
   }
 
   return (
     <div className="tab-container">
-      <Radio.Group options={options} onChange={handleOnChange} value={value} />
+      <Tabs
+        defaultActiveKey="1"
+        centered={true}
+        items={items}
+        onChange={handleOnChange}
+      />
     </div>
   )
 }

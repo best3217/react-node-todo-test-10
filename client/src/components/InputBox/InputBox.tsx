@@ -1,35 +1,38 @@
-import React, { useState } from "react";
-import { Input, Button } from "antd";
+import React, { useState, useRef } from "react"
+import { Input, Button, InputRef } from "antd"
 
-import "./InputBox.scss";
+import "./InputBox.scss"
 
 interface SeachProps {
-  placeholder: string;
-  onAddClick: (note: string) => void;
+  placeholder: string
+  onAddClick: (note: string) => void
 }
 
 const InputBox: React.FC<SeachProps> = ({ placeholder, onAddClick }) => {
-  const [note, setNote] = useState<string>("");
+  const inputRef = useRef<InputRef>(null)
+  const [note, setNote] = useState<string>("")
+
+  const handleOnClick = async () => {
+    await onAddClick(note)
+    setNote("")
+    if (!inputRef.current) return
+    inputRef.current.focus()
+  }
 
   return (
     <div className="search-container">
       <Input
         type="text"
         placeholder={placeholder}
+        ref={inputRef}
         value={note}
         onChange={(e: any) => setNote(e.target.value)}
       />
-      <Button
-        className="btn-add"
-        onClick={() => {
-          onAddClick(note);
-          setNote("");
-        }}
-      >
+      <Button className="btn-add" onClick={handleOnClick}>
         Add
       </Button>
     </div>
-  );
-};
+  )
+}
 
-export default InputBox;
+export default InputBox
